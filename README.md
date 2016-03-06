@@ -1,2 +1,2 @@
 # Basics
-Ultra basic boilerplate to get kicking for toy projects.
+Ultra basic boilerplate to get kicking on toy projects.
