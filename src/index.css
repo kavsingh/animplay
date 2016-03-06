@@ -1,0 +1,13 @@
+@import 'css-reset/reset.css';
+
+:global(*) {
+  box-sizing: border-box;
+}
+
+:global(html) {
+  font-size: 14px;
+}
+
+.root {
+  color: #f00;
+}
