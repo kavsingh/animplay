@@ -6,7 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --inline",
     "build": "rimraf dist && NODE_ENV=production webpack --config ./webpack.config.js",
-    "test": "babel-tape-runner src/app/**/*.test.js | node node_modules/faucet/bin/cmd.js"
+    "test": "babel-tape-runner src/**/*.test.js | node node_modules/faucet/bin/cmd.js"
   },
   "author": "",
   "license": "ISC",
