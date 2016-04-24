@@ -1,5 +1,6 @@
 import { flow, sample } from 'lodash/fp';
 import { friendly } from './util/hello';
+import { createBodymovinWrapper } from './animation/bodymovinWrapper';
 import globalStyles from './index.css';
 
 const greet = flow(sample, friendly);
@@ -8,3 +9,5 @@ root.classList.add(globalStyles.root);
 root.innerHTML = greet(['dude', 'dudette', 'compadre', 'affendi', 'something']);
 
 document.body.appendChild(root);
+
+createBodymovinWrapper({}, root);

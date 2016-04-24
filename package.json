@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.6.1",
+    "bodymovin": "^4.1.8",
     "css-reset": "0.0.1",
     "lodash": "^4.11.1"
   }
