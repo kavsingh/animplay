@@ -1,13 +1,16 @@
-import { flow, sample } from 'lodash/fp';
-import { friendly } from './util/hello';
+import { forEach, mapValues } from 'lodash/fp';
 import { createBodymovinWrapper } from './animation/bodymovinWrapper';
+import { loadAnimations } from './animations';
 import globalStyles from './index.css';
 
-const greet = flow(sample, friendly);
 const root = document.createElement('div');
 root.classList.add(globalStyles.root);
-root.innerHTML = greet(['dude', 'dudette', 'compadre', 'affendi', 'something']);
 
 document.body.appendChild(root);
 
-createBodymovinWrapper({}, root);
+async function loadAnims() {
+  const anims = await loadAnimations(['bodymovin', 'grunt']);
+  return mapValues(data => createBodymovinWrapper({ data }), anims);
+}
+
+loadAnims().then(forEach(anim => anim(root).loop()));

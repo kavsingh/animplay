@@ -10,7 +10,7 @@ const SEGMENT_LENGTH_SECONDS = 1;
  * @param {Object} animInstance - bodymovin animation instance
  * @return {Array<Object>} - Array of section definitions
  */
-const generateSegments = (animInstance) => {
+const generateSegments = animInstance => {
   const { firstFrame, totalFrames, frameRate } = animInstance;
   const frameSegments = [];
   const step = SEGMENT_LENGTH_SECONDS * frameRate;
@@ -74,7 +74,7 @@ const loopSegment = curry((animInstance, segment) => {
  * @param {Element} container - document element to render animation into
  * @return {Object} - Api for controlling animation segment playback
  */
-export function createBodymovinWrapper(animData, container) {
+export const createBodymovinWrapper = curry((animData, container) => {
   const { data, segments } = animData;
   const anim = bodymovin.loadAnimation({
     container,
@@ -98,4 +98,4 @@ export function createBodymovinWrapper(animData, container) {
     halt: () => haltAnim(anim),
     destroy: () => {},
   };
-}
+});
