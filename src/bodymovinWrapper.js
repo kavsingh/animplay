@@ -1,4 +1,4 @@
-import { curry, find, flow, head, map } from 'lodash/fp';
+import { curry, find, pipe, get, head, map } from 'lodash/fp';
 import bodymovin from 'bodymovin';
 
 /**
@@ -21,9 +21,9 @@ const generateSegments = animInstance => {
     cursor = cursor + step + 1;
   }
 
-  const frameTime = (frame) => Math.floor(frame / frameRate);
+  const frameTime = frame => Math.floor(frame / frameRate);
 
-  return map((frames) => ({
+  return map(frames => ({
     frames,
     loopFrames: frames,
     name: `${frameTime(head(frames))}s`,
@@ -34,7 +34,7 @@ const generateSegments = animInstance => {
  * @param {Object} animInstance - bodymovin animation instance
  * @return {Object} - The passed in instance
  */
-const haltAnim = (animInstance) => {
+const haltAnim = animInstance => {
   animInstance.removeEventListener('complete');
   animInstance.pause();
   return animInstance;
@@ -43,14 +43,14 @@ const haltAnim = (animInstance) => {
 /**
  * @param {Object} animInstance - bodymovin animation instance
  * @param {Object} segment - Object defining name, start / end / loop frames for segment
- * @return {PromiseLike<Object>} - Array of section definitions
+ * @return {PromiseLike<Object>} - Promise which resolves when animation is complete
  */
 const playSegment = curry((animInstance, segment) => {
   if (!segment || !segment.frames) return Promise.resolve();
 
   haltAnim(animInstance);
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     animInstance.addEventListener('complete', event => {
       haltAnim(animInstance);
       resolve(event);
@@ -66,7 +66,8 @@ const loopSegment = curry((animInstance, segment) => {
   haltAnim(animInstance);
 
   animInstance.playSegments(segment.loopFrames, true);
-  animInstance.addEventListener('complete', () => loopSegment(animInstance, segment), false);
+  animInstance.addEventListener('complete',
+    () => loopSegment(animInstance, segment), false);
 });
 
 /**
@@ -74,7 +75,7 @@ const loopSegment = curry((animInstance, segment) => {
  * @param {Element} container - document element to render animation into
  * @return {Object} - Api for controlling animation segment playback
  */
-export const createBodymovinWrapper = curry((animData, container) => {
+export function createBodymovinWrapper(animData, container) {
   const { data, segments } = animData;
   const anim = bodymovin.loadAnimation({
     container,
@@ -90,12 +91,15 @@ export const createBodymovinWrapper = curry((animData, container) => {
   const findSegment = name => find({ name }, animSegments);
 
   return {
-    getSegmentNames: () => map(({ name }) => name, animSegments),
+    getSegmentNames: () => map(get('name'), animSegments),
     play: () => playSegment(anim, allSegment),
     loop: () => loopSegment(anim, allSegment),
-    playSegment: flow(findSegment, playSegment(anim)),
-    loopSegment: flow(findSegment, loopSegment(anim)),
+    playSegment: pipe(findSegment, playSegment(anim)),
+    loopSegment: pipe(findSegment, loopSegment(anim)),
     halt: () => haltAnim(anim),
-    destroy: () => {},
+    destroy: () => {
+      haltAnim(anim);
+      bodymovin.destroy(anim);
+    },
   };
-});
+}

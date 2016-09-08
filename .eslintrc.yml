@@ -1,9 +1,14 @@
-extends: [airbnb-base, 'plugin:lodash-fp/recommended']
+extends:
+  - airbnb-base
+  - plugin:lodash-fp/recommended
+
 parser: babel-eslint
-plugins: [babel, lodash-fp]
+
+plugins:
+  - lodash-fp
+
 rules:
-  babel/generator-star-spacing: 1
-  babel/new-cap: 1
-  babel/object-shorthand: 1
-  babel/no-await-in-loop: 1
-  lodash-fp/consistent-compose: [error, flow]
+  import/prefer-default-export: off
+  lodash-fp/consistent-compose:
+    - error
+    - pipe
