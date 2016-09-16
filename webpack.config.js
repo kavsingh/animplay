@@ -32,6 +32,11 @@ module.exports = {
         test: /\.(jpg|png|gif)$/,
         loader: 'file-loader',
       },
+      {
+        test: /\.json$/,
+        include: path.join(__dirname, 'src'),
+        loader: 'json',
+      },
     ],
   },
   postcss: [
@@ -41,6 +46,9 @@ module.exports = {
     new ExtractTextPlugin('style.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
+    new webpack.ProvidePlugin({
+      Promise: 'bluebird',
     }),
     new HtmlWebpackPlugin({
       title: 'Basics',

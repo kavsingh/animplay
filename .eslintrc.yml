@@ -1,0 +1,19 @@
+extends:
+  - airbnb-base
+  - plugin:lodash-fp/recommended
+
+parser: babel-eslint
+
+plugins:
+  - lodash-fp
+
+rules:
+  import/prefer-default-export: off
+  arrow-parens: off
+  import/no-extraneous-dependencies:
+    - error
+    - devDependencies: true
+      optionalDependencies: true
+  lodash-fp/consistent-compose:
+    - error
+    - pipe
