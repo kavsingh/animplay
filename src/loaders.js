@@ -1,4 +1,5 @@
-/* eslint-disable global-require */
+/* eslint-disable global-require, import/no-dynamic-require */
+/* global require */
 import { map, zipObject } from 'lodash/fp';
 
 const animationLoader = name =>

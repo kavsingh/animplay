@@ -8,9 +8,10 @@ root.classList.add(globalStyles.root);
 
 document.body.appendChild(root);
 
-async function getWrappedAnims() {
-  const anims = await loadAnimations(['bodymovin', 'grunt']);
+async function getWrappedAnims(animNames) {
+  const anims = await loadAnimations(animNames);
   return mapValues(data => partial(createBodymovinWrapper, [{ data }]), anims);
 }
 
-getWrappedAnims().then(forEach(wrapped => wrapped(root).loop()));
+getWrappedAnims(['bodymovin', 'grunt']).then(
+  forEach(wrapped => wrapped(root).loop()));
