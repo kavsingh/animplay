@@ -6,12 +6,12 @@ test('Loads animations', async t => {
   t.plan(2);
 
   const spy = sinon.spy();
-  const mockLoader = name => Promise.resolve().then(spy).then(() => ({ name }));
+  const mockLoader = name => Promise.resolve().then(spy).then(() => `${name}_`);
   const loaded = await loadAnimations(['this', 'that'], mockLoader);
 
   t.is(2, spy.callCount);
   t.deepEqual({
-    this: { name: 'this' },
-    that: { name: 'that' },
+    this: { data: 'this_', segments: {} },
+    that: { data: 'that_', segments: {} },
   }, loaded);
 });
