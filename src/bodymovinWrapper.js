@@ -1,4 +1,4 @@
-import { curry, find, pipe, get, head, map } from 'lodash/fp';
+import { curry, find, pipe, get, head, map, isEmpty } from 'lodash/fp';
 import bodymovin from 'bodymovin';
 
 /**
@@ -8,7 +8,7 @@ const SEGMENT_LENGTH_SECONDS = 1;
 
 /**
  * @param {Object} animInstance - bodymovin animation instance
- * @return {Array<Object>} - Array of section definitions
+ * @return {Array<Object>} - Array of segment definitions
  */
 const generateSegments = animInstance => {
   const { firstFrame, totalFrames, frameRate } = animInstance;
@@ -87,7 +87,7 @@ export function createBodymovinWrapper(animData, container) {
   const { firstFrame, totalFrames } = anim;
   const frames = [firstFrame, totalFrames - firstFrame];
   const allSegment = { frames, loopFrames: frames };
-  const animSegments = segments || generateSegments(anim);
+  const animSegments = isEmpty(segments) ? generateSegments(anim) : segments;
   const findSegment = name => find({ name }, animSegments);
 
   return {
