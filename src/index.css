@@ -8,6 +8,18 @@
   font-size: 14px;
 }
 
-.root {
-  /* Begin */
+.animContainer {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.button {
+  border: none;
+  background-color: slateblue;
+  color: white;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 1.2em;
+  padding: 0.4em 1em;
+  margin: 0 0.4em;
 }

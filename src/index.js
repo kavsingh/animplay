@@ -1,17 +1,39 @@
-import { forEach, mapValues, partial } from 'lodash/fp';
+import { forEach } from 'lodash/fp';
 import { loadAnimations } from './loaders';
 import { createBodymovinWrapper } from './bodymovinWrapper';
-import globalStyles from './index.css';
+import styles from './index.css';
 
-const root = document.createElement('div');
-root.classList.add(globalStyles.root);
+const loopedRoot = document.createElement('div');
+const controlledRoot = document.createElement('div');
 
-document.body.appendChild(root);
+const initLooped = (animData, container) =>
+  createBodymovinWrapper(animData, container).loop();
 
-async function getWrappedAnims(animNames) {
-  const anims = await loadAnimations(animNames);
-  return mapValues(data => partial(createBodymovinWrapper, [{ data }]), anims);
-}
+const initControlled = (animData, container) => {
+  const wrapped = createBodymovinWrapper(animData, container);
 
-getWrappedAnims(['bodymovin', 'grunt']).then(
-  forEach(wrapped => wrapped(root).loop()));
+  forEach(segment => {
+    const button = document.createElement('button');
+    button.innerText = segment;
+    button.classList.add(styles.button);
+    container.appendChild(button);
+    button.addEventListener('click', () => wrapped.loopSegment(segment), false);
+  }, wrapped.getSegmentNames());
+};
+
+forEach(el => {
+  el.classList.add(styles.animContainer);
+  document.body.appendChild(el);
+}, [loopedRoot, controlledRoot]);
+
+loadAnimations(['bodymovin', 'testAnim1']).then(({ bodymovin, testAnim1 }) => {
+  initLooped(bodymovin, loopedRoot);
+  initControlled({
+    ...testAnim1,
+    segments: [
+      { name: 'one', frames: [0, 24], loopFrames: [0, 24] },
+      { name: 'two', frames: [24, 40], loopFrames: [24, 40] },
+      { name: 'three', frames: [40, 60], loopFrames: [40, 60] },
+    ],
+  }, controlledRoot);
+});
